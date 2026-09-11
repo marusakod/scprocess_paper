@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Marusa Koderman" />
+
+<meta name="date" content="2026-08-31" />
+
+<title>Code for reproducing figures in scprocess manuscript</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">scprocess paper figures</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Code for reproducing figures in scprocess
+manuscript</h1>
+<h4 class="author">Marusa Koderman</h4>
+<h4 class="date">2026-08-31</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-09-11
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>scprocess_paper/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240722code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240722)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240722code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240722)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommarusakodscprocesspapertree0d9f18e69ddb18bba5a94e2a7f58d7790483a73ctargetblank0d9f18ea">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/marusakod/scprocess_paper/tree/0d9f18e69ddb18bba5a94e2a7f58d7790483a73c" target="_blank">0d9f18e</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcommarusakodscprocesspapertree0d9f18e69ddb18bba5a94e2a7f58d7790483a73ctargetblank0d9f18ea"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/marusakod/scprocess_paper/tree/0d9f18e69ddb18bba5a94e2a7f58d7790483a73c" target="_blank">0d9f18e</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    ._.DS_Store
+    Ignored:    .log/
+    Ignored:    analysis/figure/
+    Ignored:    data/
+    Ignored:    output/compare_hvg_methods/.cache/
+    Ignored:    output/compare_hvg_methods/.log/
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/absinta_2021/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/absinta_2021/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/bostrand_2024/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/bostrand_2024/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/butler_2025/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/butler_2025/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/butler_2025/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/fagiani_2025/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/fagiani_2025/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/fagiani_2025/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/li_2023/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/li_2023/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/li_2023/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/macnair_2025_gm/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/mckeever_2024/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/mckeever_2024/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/mckeever_2024/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/morabito_2021/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/morabito_2021/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/morabito_2021/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/pineda_2024/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/pineda_2024/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/smajic_2022/pb_celltypes.rds
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_astrocytes/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_myeloid/sample_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/all_keep_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/comparison_tmp/
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_excl_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_excl_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_excl_ambient/top_hvgs_counts.h5
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_keep_ambient/integrated_dt.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_keep_ambient/standardized_variance_stats.csv.gz
+    Ignored:    output/compare_hvg_methods/smajic_2022/zoom_oligos/sample_keep_ambient/top_hvgs_counts.h5
+
+Untracked files:
+    Untracked:  .Rprofile
+    Untracked:  .gitattributes
+    Untracked:  README.md
+    Untracked:  analysis/custom.css
+    Untracked:  analysis/license.Rmd
+    Untracked:  pb_celltypes_data.tar.gz
+    Untracked:  scprocess_paper.Rproj
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/compare_hvg_methods.Rmd</code>)
+and HTML (<code>public/compare_hvg_methods.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/marusakod/scprocess_paper/blob/0d9f18e69ddb18bba5a94e2a7f58d7790483a73c/analysis/compare_hvg_methods.Rmd" target="_blank">0d9f18e</a>
+</td>
+<td>
+Marusa Koderman
+</td>
+<td>
+2026-09-11
+</td>
+<td>
+oops
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/marusakod/scprocess_paper/blob/1a1068c2c8feb6db2171710e731201b5bac50359/analysis/compare_hvg_methods.Rmd" target="_blank">1a1068c</a>
+</td>
+<td>
+Marusa Koderman
+</td>
+<td>
+2026-09-11
+</td>
+<td>
+switch back to base workflowr
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/marusakod/scprocess_paper/blob/e5846e1ecd7d73abb555ea7fe453d0f86e4ba6b0/analysis/compare_hvg_methods.Rmd" target="_blank">e5846e1</a>
+</td>
+<td>
+Marusa Koderman
+</td>
+<td>
+2026-09-11
+</td>
+<td>
+now downloading pseudobulks from the release
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/marusakod/scprocess_paper/blob/cf75228346e199d7ddfaa80c0f9b76225438ed2a/analysis/compare_hvg_methods.Rmd" target="_blank">cf75228</a>
+</td>
+<td>
+Marusa Koderman
+</td>
+<td>
+2026-09-11
+</td>
+<td>
+initial commit
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>source(&quot;code/compare_hvg_methods.R&quot;)
+
+out_dir    = &#39;output/compare_hvg_methods&#39;
+cache_dir  = file.path(out_dir, &quot;.cache&quot;)
+config_dir = &#39;data/scprocess_configs&#39;
+lineages   = c(&quot;astrocytes&quot;, &quot;myeloid&quot;, &quot;oligos&quot;)
+overwrite  = FALSE
+
+project_names = c(&quot;morabito_2021&quot;, &quot;fagiani_2025&quot;, &quot;mckeever_2024&quot;, &quot;absinta_2021&quot;,
+   &quot;smajic_2022&quot;, &quot;macnair_2025_gm&quot;, &quot;li_2023&quot;, &quot;bostrand_2024&quot;, &quot;pineda_2024&quot;,
+   &quot;butler_2025&quot;)
+
+# paths to scprocess config files
+config_ls = file.path(config_dir,paste0(&quot;config-&quot;, project_names, &quot;.yaml&quot;)) %&gt;%
+  setNames(project_names)</code></pre>
+<pre class="r"><code># load all hvg and edger stats
+
+hvg_data = cached_rds(file.path(cache_dir, &quot;hvg_data.rds&quot;), {
+  hvg_all = lapply(config_ls, function(cf) load_hvg_comparison(cf, out_dir))
+  hvg_by_lineage = lapply(lineages, function(z) {
+    lapply(config_ls, function(cf) load_hvg_comparison(cf, out_dir, zoom = z))
+  }) %&gt;% setNames(lineages)
+
+  list(hvg_all = hvg_all, hvg_by_lineage = hvg_by_lineage)
+}, overwrite = overwrite)
+
+hvg_data = c(hvg_data$hvg_all, unlist(hvg_data$hvg_by_lineage, recursive = FALSE))</code></pre>
+<pre class="r"><code># load results of fgsea on ambient genes
+
+fgsea_data = cached_rds(file.path(cache_dir, &quot;fgsea_data.rds&quot;), {
+  path_sets = c(&quot;go_bp&quot;, &quot;go_cc&quot;)
+  lapply(path_sets, function(ps) {
+    config_ls %&gt;% lapply(function(cf) load_fgsea_comparison(cf, out_dir, path_set = ps))
+  }) %&gt;% setNames(path_sets)
+}, overwrite = overwrite)
+
+path_set_labels = c(
+  go_bp = &quot;Supplementary Figure 1: GO Biological Process&quot;,
+  go_cc = &quot;Supplementary Figure 2: GO Cellular Component&quot;
+  )</code></pre>
+<pre class="r"><code># get common ambient HVGs across studies for batch aware and unaware feature selection
+
+common_ambient_hvg_batch_unaware = common_ambient_gene_table(hvg_data, n_top = 10, hvg_method = &quot;all_keep_ambient&quot;)
+common_ambient_hvg_batch_aware   = common_ambient_gene_table(hvg_data, n_top = 10, hvg_method = &quot;sample_keep_ambient&quot;)</code></pre>
+<pre class="r"><code># check which common ambient genes overlap with leading edge genes for significant fgsea terms
+
+leading_edge_overlap_gene_dt = list(
+  all_keep_ambient    = leading_edge_overlap_dt(fgsea_data, common_ambient_hvg_batch_unaware$symbol),
+  sample_keep_ambient = leading_edge_overlap_dt(fgsea_data, common_ambient_hvg_batch_aware$symbol)
+)</code></pre>
+<pre class="r"><code># load psuedobulk counts for common ambient HVGs
+
+pseudobulk_cell_types = c(&quot;astrocytes&quot;, &quot;myeloid&quot;, &quot;oligos&quot;, &quot;neurons&quot;, &quot;vascular&quot;, &quot;all cells&quot;)
+common_ambient_expr_ls = list(
+  all_keep_ambient = cached_rds(file.path(cache_dir, &quot;common_ambient_pseudobulk_batch_unaware.rds&quot;), {
+    load_pseudobulk(
+      common_ambient_hvg_batch_unaware$gene_id,
+      pseudobulk_cell_types, config_ls, out_dir
+      )
+    }, overwrite = overwrite),
+  sample_keep_ambient = cached_rds(file.path(cache_dir, &quot;common_ambient_pseudobulk_batch_aware.rds&quot;), {
+    load_pseudobulk(
+      common_ambient_hvg_batch_aware$gene_id,
+      pseudobulk_cell_types, config_ls, out_dir
+      )
+    }, overwrite = overwrite)
+  )</code></pre>
+<div id="figures" class="section level2">
+<h2>Figures</h2>
+<div id="figure-1b" class="section level3">
+<h3>Figure 1B</h3>
+<p>Proportion of HVGs that are ambient in different lineages.</p>
+<pre class="r"><code>print(plot_prop_ambient(hvg_data))</code></pre>
+<p><img src="figure/compare_hvg_methods.Rmd/figure_1b-1.png" alt="" width="624" style="display: block; margin: auto;" /></p>
+</div>
+<div id="supplementary-figure-1-2" class="section level3 tabset">
+<h3 class="tabset">Supplementary Figure 1, 2</h3>
+<pre class="r"><code>for (ps in c(&quot;go_bp&quot;, &quot;go_cc&quot;)) {
+  cat(sprintf(&quot;#### %s\n\n&quot;, path_set_labels[ps]))
+  pl_ls = lapply(c(&quot;all cells&quot;, lineages), function(lin){
+    plot_gsea_dotplot_by_lineage(fgsea_data[[ps]], sel_lineage = lin)
+  })
+  print(wrap_plots(pl_ls, ncol = 1, nrow = 4))
+  cat(&quot;\n\n&quot;)
+}</code></pre>
+<div id="supplementary-figure-1-go-biological-process"
+class="section level4">
+<h4>Supplementary Figure 1: GO Biological Process</h4>
+<p><img src="figure/compare_hvg_methods.Rmd/gsea_dotplots_by_lineage-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+</div>
+<div id="supplementary-figure-2-go-cellular-component"
+class="section level4">
+<h4>Supplementary Figure 2: GO Cellular Component</h4>
+<p><img src="figure/compare_hvg_methods.Rmd/gsea_dotplots_by_lineage-2.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="figure-1c" class="section level3">
+<h3>Figure 1C</h3>
+<pre class="r"><code>tmp_term_dt = data.table(
+  gene = c(&quot;HBB&quot;, &quot;HBA2&quot;, &quot;FGF14&quot;, &quot;PAK3&quot;, &quot;GFAP&quot;),
+  term = c(&quot;term1&quot;, &quot;term1&quot;, &quot;term2&quot;, &quot;term2&quot;, &quot;term2&quot;)
+)
+plot_common_ambient_heatmap(
+  common_ambient_hvg_batch_unaware,
+  common_ambient_expr_ls$all_keep_ambient,
+  use_zscore = TRUE, term_dt = tmp_term_dt
+  )</code></pre>
+<p><img src="figure/compare_hvg_methods.Rmd/common_ambient_batch_unaware_heatmap-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="supplementary-figure-3" class="section level3">
+<h3>Supplementary Figure 3</h3>
+<pre class="r"><code>plot_common_ambient_heatmap(
+  common_ambient_hvg_batch_aware,
+  common_ambient_expr_ls$sample_keep_ambient,
+  use_zscore = TRUE
+  )</code></pre>
+<p><img src="figure/compare_hvg_methods.Rmd/common_ambient_batch_aware_heatmap-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.2 (2025-10-31)
+Platform: x86_64-pc-linux-gnu
+Running under: Red Hat Enterprise Linux 8.10 (Ootpa)
+
+Matrix products: default
+BLAS/LAPACK: FlexiBLAS OPENBLAS;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Europe/Zurich
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    grid      stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] patchwork_1.3.2             edgeR_4.8.2                
+ [3] limma_3.66.0                SingleCellExperiment_1.32.0
+ [5] SummarizedExperiment_1.40.0 Biobase_2.70.0             
+ [7] GenomicRanges_1.62.1        Seqinfo_1.0.0              
+ [9] IRanges_2.44.0              S4Vectors_0.49.1-1         
+[11] BiocGenerics_0.56.0         generics_0.1.4             
+[13] MatrixGenerics_1.22.0       matrixStats_1.5.0          
+[15] circlize_0.4.18             ComplexHeatmap_2.26.1      
+[17] stringr_1.6.0               ggbeeswarm_0.7.3           
+[19] magrittr_2.0.5              scales_1.4.0               
+[21] yaml_2.3.12                 ggplot2_4.0.3              
+[23] data.table_1.18.2.1         workflowr_1.7.2            
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1    dplyr_1.2.1         vipor_0.4.7        
+ [4] farver_2.1.2        S7_0.2.2            fastmap_1.2.0      
+ [7] promises_1.5.0      digest_0.6.39       lifecycle_1.0.5    
+[10] cluster_2.1.8.2     Cairo_1.7-0         statmod_1.5.1      
+[13] processx_3.9.0      compiler_4.5.2      rlang_1.2.0        
+[16] sass_0.4.10         tools_4.5.2         knitr_1.51         
+[19] S4Arrays_1.10.1     DelayedArray_0.36.1 RColorBrewer_1.1-3 
+[22] abind_1.4-8         withr_3.0.2         git2r_0.36.2       
+[25] colorspace_2.1-2    iterators_1.0.14    dichromat_2.0-0.1  
+[28] cli_3.6.6           rmarkdown_2.31      crayon_1.5.3       
+[31] otel_0.2.0          rstudioapi_0.18.0   httr_1.4.8         
+[34] rjson_0.2.23        cachem_1.1.0        parallel_4.5.2     
+[37] XVector_0.50.0      vctrs_0.7.3         Matrix_1.7-5       
+[40] jsonlite_2.0.0      callr_3.7.6         GetoptLong_1.1.1   
+[43] clue_0.3-68         beeswarm_0.4.0      magick_2.9.1       
+[46] locfit_1.5-9.12     foreach_1.5.2       jquerylib_0.1.4    
+[49] glue_1.8.1          codetools_0.2-20    ps_1.9.3           
+[52] stringi_1.8.7       gtable_0.3.6        shape_1.4.6.1      
+[55] later_1.4.8         tibble_3.3.1        pillar_1.11.1      
+[58] htmltools_0.5.9     R6_2.6.1            doParallel_1.0.17  
+[61] rprojroot_2.1.1     evaluate_1.0.5      lattice_0.22-9     
+[64] png_0.1-9           httpuv_1.6.17       bslib_0.10.0       
+[67] Rcpp_1.1.1-1.1      SparseArray_1.10.10 whisker_0.4.1      
+[70] xfun_0.57           fs_2.1.0            getPass_0.2-4      
+[73] pkgconfig_2.0.3     GlobalOptions_0.1.4</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
