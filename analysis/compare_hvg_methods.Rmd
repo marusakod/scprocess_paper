@@ -1,0 +1,151 @@
+---
+title: "Code for reproducing figures in scprocess manuscript"
+author: "Marusa Koderman"
+date: "2026-08-31"
+output:
+  rmdformats::downcute:
+    highlight: textmate
+    code_folding: hide
+    toc_depth: 3
+    css: scprocess_downcute.css
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+source("code/compare_hvg_methods.R")
+```
+
+```{r inputs}
+out_dir    = 'output/compare_hvg_methods'
+cache_dir  = file.path(out_dir, ".cache")
+config_dir = 'data/scprocess_configs'
+lineages   = c("astrocytes", "myeloid", "oligos")
+overwrite  = FALSE
+
+project_names = c("morabito_2021", "fagiani_2025", "mckeever_2024", "absinta_2021",
+   "smajic_2022", "macnair_2025_gm", "li_2023", "bostrand_2024", "pineda_2024",
+   "butler_2025")
+
+# paths to scprocess config files
+config_ls = file.path(config_dir,paste0("config-", project_names, ".yaml")) %>%
+  setNames(project_names)
+```
+
+```{r load_hvg_data}
+# load all hvg and edger stats
+
+hvg_data = cached_rds(file.path(cache_dir, "hvg_data.rds"), {
+  hvg_all = lapply(config_ls, function(cf) load_hvg_comparison(cf, out_dir))
+  hvg_by_lineage = lapply(lineages, function(z) {
+    lapply(config_ls, function(cf) load_hvg_comparison(cf, out_dir, zoom = z))
+  }) %>% setNames(lineages)
+
+  list(hvg_all = hvg_all, hvg_by_lineage = hvg_by_lineage)
+}, overwrite = overwrite)
+
+hvg_data = c(hvg_data$hvg_all, unlist(hvg_data$hvg_by_lineage, recursive = FALSE))
+```
+
+```{r load_fgsea_data}
+# load results of fgsea on ambient genes
+
+fgsea_data = cached_rds(file.path(cache_dir, "fgsea_data.rds"), {
+  path_sets = c("go_bp", "go_cc")
+  lapply(path_sets, function(ps) {
+    config_ls %>% lapply(function(cf) load_fgsea_comparison(cf, out_dir, path_set = ps))
+  }) %>% setNames(path_sets)
+}, overwrite = overwrite)
+
+path_set_labels = c(
+  go_bp = "Supplementary Figure 1: GO Biological Process",
+  go_cc = "Supplementary Figure 2: GO Cellular Component"
+  )
+```
+
+```{r common_ambient_genes}
+# get common ambient HVGs across studies for batch aware and unaware feature selection
+
+common_ambient_hvg_batch_unaware = common_ambient_gene_table(hvg_data, n_top = 10, hvg_method = "all_keep_ambient")
+common_ambient_hvg_batch_aware   = common_ambient_gene_table(hvg_data, n_top = 10, hvg_method = "sample_keep_ambient")
+```
+
+
+```{r leading_edge_overlap}
+# check which common ambient genes overlap with leading edge genes for significant fgsea terms
+
+leading_edge_overlap_gene_dt = list(
+  all_keep_ambient    = leading_edge_overlap_dt(fgsea_data, common_ambient_hvg_batch_unaware$symbol),
+  sample_keep_ambient = leading_edge_overlap_dt(fgsea_data, common_ambient_hvg_batch_aware$symbol)
+)
+```
+
+```{r load_pseudobulks}
+# load psuedobulk counts for common ambient HVGs
+
+pseudobulk_cell_types = c("astrocytes", "myeloid", "oligos", "neurons", "vascular", "all cells")
+common_ambient_expr_ls = list(
+  all_keep_ambient = cached_rds(file.path(cache_dir, "common_ambient_pseudobulk_batch_unaware.rds"), {
+    load_pseudobulk(
+      common_ambient_hvg_batch_unaware$gene_id,
+      pseudobulk_cell_types, config_ls, out_dir
+      )
+    }, overwrite = overwrite),
+  sample_keep_ambient = cached_rds(file.path(cache_dir, "common_ambient_pseudobulk_batch_aware.rds"), {
+    load_pseudobulk(
+      common_ambient_hvg_batch_aware$gene_id,
+      pseudobulk_cell_types, config_ls, out_dir
+      )
+    }, overwrite = overwrite)
+  )
+```
+
+
+## Figures
+
+### Figure 1B
+
+Proportion of HVGs that are ambient in different lineages.
+
+```{r figure_1b, fig.width = 6.5, fig.height = 3.5}
+print(plot_prop_ambient(hvg_data))
+```
+
+### Supplementary Figure 1, 2 {.tabset}
+
+```{r gsea_dotplots_by_lineage, fig.width = 5, fig.height = 12, results = "asis"}
+for (ps in c("go_bp", "go_cc")) {
+  cat(sprintf("#### %s", path_set_labels[ps]))
+  pl_ls = lapply(c("all cells", lineages), function(lin){
+    plot_gsea_dotplot_by_lineage(fgsea_data[[ps]], sel_lineage = lin)
+  })
+  print(wrap_plots(pl_ls, ncol = 1, nrow = 4))
+  cat("\n\n")
+}
+```
+
+### Figure 1C
+
+```{r common_ambient_batch_unaware_heatmap, fig.width = 12, fig.height = 9}
+tmp_term_dt = data.table(
+  gene = c("HBB", "HBA2", "FGF14", "PAK3", "GFAP"),
+  term = c("term1", "term1", "term2", "term2", "term2")
+)
+plot_common_ambient_heatmap(
+  common_ambient_hvg_batch_unaware,
+  common_ambient_expr_ls$all_keep_ambient,
+  use_zscore = TRUE, term_dt = tmp_term_dt
+  )
+```
+
+### Supplementary Figure 3
+
+```{r common_ambient_batch_aware_heatmap, fig.width = 12, fig.height = 9}
+plot_common_ambient_heatmap(
+  common_ambient_hvg_batch_aware,
+  common_ambient_expr_ls$sample_keep_ambient,
+  use_zscore = TRUE, use_complexheatmap = TRUE
+  )
+```
+
+
+
