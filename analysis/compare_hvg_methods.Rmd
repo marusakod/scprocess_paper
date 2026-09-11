@@ -123,7 +123,7 @@ for (ps in c("go_bp", "go_cc")) {
   pl_ls = lapply(c("all cells", lineages), function(lin){
     plot_gsea_dotplot_by_lineage(fgsea_data[[ps]], sel_lineage = lin)
   })
-  print(wrap_plots(pl_ls, ncol = 1, nrow = 4)
+  print(wrap_plots(pl_ls, ncol = 1, nrow = 4))
   cat("\n\n")
 }
 ```
