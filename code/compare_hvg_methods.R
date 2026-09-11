@@ -401,9 +401,9 @@ COMMON_AMBIENT_GLIAL_TYPES = c("myeloid", "oligos", "astrocytes")
   )
 
   ComplexHeatmap::draw(ht,
-    column_title      = "Study, grouped by real cell type",
+    column_title      = "Columns are cell types for gene expression",
     column_title_side = "top",
-    row_title         = "Top ambient + HVG gene, grouped by lineage where flagged",
+    row_title         = "Rows are cell types for gene selection",
     row_title_side    = "left",
     padding           = unit.c(unit(2, "mm"), unit(2, "mm"), top_pad, unit(2, "mm"))
   )
