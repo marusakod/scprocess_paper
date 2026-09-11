@@ -20,7 +20,7 @@ out_dir    = 'output/compare_hvg_methods'
 cache_dir  = file.path(out_dir, ".cache")
 config_dir = 'data/scprocess_configs'
 lineages   = c("astrocytes", "myeloid", "oligos")
-overwrite  = FALSE
+overwrite  = TRUE
 
 project_names = c("morabito_2021", "fagiani_2025", "mckeever_2024", "absinta_2021",
    "smajic_2022", "macnair_2025_gm", "li_2023", "bostrand_2024", "pineda_2024",
@@ -143,9 +143,6 @@ plot_common_ambient_heatmap(
 plot_common_ambient_heatmap(
   common_ambient_hvg_batch_aware,
   common_ambient_expr_ls$sample_keep_ambient,
-  use_zscore = TRUE, use_complexheatmap = TRUE
+  use_zscore = TRUE
   )
 ```
-
-
-

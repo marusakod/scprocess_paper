@@ -83,10 +83,19 @@ load_pseudobulk <- function(gene_ids, cell_types, config_ls, out_dir, pseudo_cou
 
   gene_ids     = unique(gene_ids)
 
+  # download tarball with all pseudobulks from github repo
+  url = "https://github.com/marusakod/scprocess_paper/releases/download/v0.1.0/pb_celltypes_data.tar.gz"
+  temp_tar = tempfile(fileext = ".tar.gz")
+  download.file(url, destfile = temp_tar, mode = "wb")
+
+  message("Extracting files from pseudobulk tarball...")
+  untar(temp_tar, exdir = ".")
+  unlink(temp_tar)
+
   pb_dt = config_ls %>% lapply(function(config_f) {
     p = .parse_config(config_f)
 
-    pb_f = .pb_celltypes_file(p, out_dir)
+    pb_f = file.path(out_dir, p$proj_name, "pb_celltypes.rds")
     if (!file.exists(pb_f)) {
       message("  [SKIP] missing pseudobulk celltypes file (", p$proj_name, "): ", pb_f)
       return(NULL)
@@ -240,11 +249,6 @@ common_ambient_gene_table <- function(dat_ls, n_top = 20, hvg_method = c("sample
   gene_dt[is.na(symbol), symbol := gene_id]
 
   return (gene_dt)
-}
-
-
-.pb_celltypes_file <- function(p, out_dir) {
-  file.path(out_dir, p$proj_name, sprintf("pb_celltypes_%s_%s.rds", p$full_tag, p$date_stamp))
 }
 
 
