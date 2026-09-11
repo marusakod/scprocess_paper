@@ -3,24 +3,29 @@ title: "Code for reproducing figures in scprocess manuscript"
 author: "Marusa Koderman"
 date: "2026-08-31"
 output:
-  rmdformats::downcute:
-    highlight: textmate
-    code_folding: hide
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
     toc_depth: 3
-    css: scprocess_downcute.css
+    highlight: textmate
+    code_folding: show
+    self_contained: true
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-source("code/compare_hvg_methods.R")
 ```
 
 ```{r inputs}
+source("code/compare_hvg_methods.R")
+
 out_dir    = 'output/compare_hvg_methods'
 cache_dir  = file.path(out_dir, ".cache")
 config_dir = 'data/scprocess_configs'
 lineages   = c("astrocytes", "myeloid", "oligos")
-overwrite  = TRUE
+overwrite  = FALSE
 
 project_names = c("morabito_2021", "fagiani_2025", "mckeever_2024", "absinta_2021",
    "smajic_2022", "macnair_2025_gm", "li_2023", "bostrand_2024", "pineda_2024",
@@ -112,13 +117,13 @@ print(plot_prop_ambient(hvg_data))
 
 ### Supplementary Figure 1, 2 {.tabset}
 
-```{r gsea_dotplots_by_lineage, fig.width = 5, fig.height = 12, results = "asis"}
+```{r gsea_dotplots_by_lineage, fig.width = 11, fig.height = 15, results = "asis"}
 for (ps in c("go_bp", "go_cc")) {
-  cat(sprintf("#### %s", path_set_labels[ps]))
+  cat(sprintf("#### %s\n\n", path_set_labels[ps]))
   pl_ls = lapply(c("all cells", lineages), function(lin){
     plot_gsea_dotplot_by_lineage(fgsea_data[[ps]], sel_lineage = lin)
   })
-  print(wrap_plots(pl_ls, ncol = 1, nrow = 4))
+  print(wrap_plots(pl_ls, ncol = 1, nrow = 4)
   cat("\n\n")
 }
 ```

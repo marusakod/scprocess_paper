@@ -1,0 +1,10 @@
+name: "scprocess_paper"
+output_dir: ../public
+navbar:
+  title: "scprocess paper figures"
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+    highlight: textmate
+    code_folding: hide
